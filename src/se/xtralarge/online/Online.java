@@ -51,27 +51,11 @@ public class Online extends JavaPlugin {
 				for(int i=0; i < worlds.size(); i++) {
 					outputWorldPlayers(worlds.get(i), player, worlds.get(i).getName(), false);
 				}
-				//Player[] players = this.getServer().getOnlinePlayers();
-				
-				//outputServerPlayers(player, players);
 			}
 		}
 		
 		return true;
 	}
-	
-	/*
-	private void outputServerPlayers(Player player, Player[] players) {
-		String playerOutList = "";
-		
-		for(int i = 0; i < players.length; i++) {
-			playerOutList += players[i].getDisplayName() +" ";
-		}
-		
-		player.sendMessage("Spelare "+ ChatColor.GREEN +"online:");
-		player.sendMessage(playerOutList);
-	}
-	*/
 	
 	private void outputWorldPlayers(World world, Player player, String argWorld, Boolean showNotOnline) {
 		if(world != null) {
