@@ -1,0 +1,8 @@
+name: Online
+main: se.xtralarge.online.Online
+version: 0.1
+author: getninjaN
+commands:
+   online:
+      description: Shows online players in entered world
+      usage: /online <world name> or /online
