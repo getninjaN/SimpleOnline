@@ -1,12 +1,12 @@
 Usage: /online
 Lists all players on server and which world they are in.
 Example:
-Online i "world1": player1 player2 player3
-Online i "world2": player4 player5
+Online in "world1": player1 player2 player3
+Online in "world2": player4 player5
 
 
-Usage: /online world
+Usage: /online world2
 Lists all players on server in the world entered
-Example: Online i "world": player4 player5
+Example: Online in "world2": player4 player5
 
 I would like to thank my family for their support.
