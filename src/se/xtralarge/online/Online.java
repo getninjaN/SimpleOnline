@@ -2,13 +2,14 @@ package se.xtralarge.online;
 
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.bukkit.ChatColor;
+//import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+//import java.io.File;
 
 // Main class
 public class Online extends JavaPlugin {
@@ -16,7 +17,12 @@ public class Online extends JavaPlugin {
 	
 	// Plug-in enabled
 	public void onEnable(){
+		//this.saveConfig();
+		
 		log.info(this.getDescription().getFullName() +" has been enabled!");
+		
+		this.getConfig().options().copyDefaults(true);
+        saveConfig();
 	}
 	
 	// Plug-in disabled
@@ -26,15 +32,6 @@ public class Online extends JavaPlugin {
 	
 	// When player enters command
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		Player player = null;
-		
-		if(sender instanceof Player) {
-			player = (Player) sender;
-		} else {
-			sender.sendMessage("Endast spelare i dagsläget.");
-			return true;
-		}
-		
 		if(cmd.getName().equalsIgnoreCase("online")) {
 			World world = null;
 			List<World> worlds = null;
@@ -44,12 +41,12 @@ public class Online extends JavaPlugin {
 			} else if (args.length == 1) {
 				world = this.getServer().getWorld(args[0]);
 				
-				outputWorldPlayers(world, player, args[0], true);
+				outputWorldPlayers(world, sender, args[0], true);
 			} else if (args.length == 0) {
 				worlds = this.getServer().getWorlds();
 				
 				for(int i=0; i < worlds.size(); i++) {
-					outputWorldPlayers(worlds.get(i), player, worlds.get(i).getName(), false);
+					outputWorldPlayers(worlds.get(i), sender, worlds.get(i).getName(), false);
 				}
 			}
 		}
@@ -57,7 +54,7 @@ public class Online extends JavaPlugin {
 		return true;
 	}
 	
-	private void outputWorldPlayers(World world, Player player, String argWorld, Boolean showNotOnline) {
+	private void outputWorldPlayers(World world, CommandSender sender, String argWorld, Boolean showNotOnline) {
 		if(world != null) {
 			String worldName = world.getName();
 			List<Player> playerList = world.getPlayers();
@@ -68,14 +65,48 @@ public class Online extends JavaPlugin {
 			}
 
 			if(playerOutList.length() > 0) {
-				player.sendMessage(ChatColor.GREEN +"Online"+ ChatColor.WHITE +" i \""+ worldName +"\": "+ playerOutList);
+				String message = parseMessage(getConfig().getString("messages.players.online"), worldName, playerOutList);
+				sender.sendMessage(message);
+				//ChatColor.GREEN +"Online"+ ChatColor.WHITE +" i \""+ worldName +"\": "+ playerOutList
 			} else {
 				if(showNotOnline) {
-					player.sendMessage(ChatColor.RED +"Inga spelare online i \""+ worldName +"\"");
+					String message = parseMessage(getConfig().getString("messages.players.nonefound"), worldName, "");
+					sender.sendMessage(message);
+					//ChatColor.RED +"Inga spelare online i \""+ worldName +"\""
 				}
 			}
 		} else {
-			player.sendMessage(ChatColor.RED +"Världen \""+ argWorld +"\" finns inte.");
+			String message = parseMessage(getConfig().getString("messages.world.notexists"), argWorld, "");
+			sender.sendMessage(message);
+			//ChatColor.RED +"Världen \""+ argWorld +"\" finns inte."
 		}
+	}
+	
+	//Parse messages
+	private static String parseMessage(String configString, String worldName, String playerOutList) {
+		String parsedString = configString;
+		
+		parsedString = parsedString.replaceAll("%world%", worldName)
+				.replaceAll("%players%", playerOutList);
+		
+		parsedString = colorize(parsedString);
+		
+		
+		return parsedString;
+	}
+	
+	//Put some color on those messages!
+	private static String colorize(String string) {
+		string = string.replace("<r>", "")
+				.replace("<black>", "\u00A70").replace("<navy>", "\u00A71")
+                .replace("<green>", "\u00A72").replace("<teal>", "\u00A73")
+                .replace("<red>", "\u00A74").replace("<purple>", "\u00A75")
+                .replace("<gold>", "\u00A76").replace("<silver>", "\u00A77")
+                .replace("<gray>", "\u00A78").replace("<blue>", "\u00A79")
+                .replace("<lime>", "\u00A7a").replace("<aqua>", "\u00A7b")
+                .replace("<rose>", "\u00A7c").replace("<pink>", "\u00A7d")
+                .replace("<yellow>", "\u00A7e").replace("<white>", "\u00A7f");
+		
+		return string;
 	}
 }

@@ -1,0 +1,29 @@
+## 
+# Variables
+#   These are wrapped in % and should be in here for the plug-in to make sense.
+#
+# Colors 
+#   You can use these as you please in each message 
+# 
+#   Supported colors: 
+#   black     white 
+#   navy      lime 
+#   green     aqua 
+#   teal      rose 
+#   red       pink 
+#   purple    yellow 
+#   gold 
+#   silver 
+#   gray 
+#   blue 
+# 
+#   Example: 
+#   <red>Online <black>players <green>in <pink>%world%: <gold>%players% 
+## 
+
+messages:
+  players:
+    online: "<green>Online <white>in %world%: %players%"
+    nonefound: "<red>No players online in %world%"
+  world:
+    notexists: "<red>The world %world% does not exist!"
