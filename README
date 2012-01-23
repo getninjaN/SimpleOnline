@@ -1,12 +1,39 @@
-Usage: /online
-Lists all players on server and which world they are in.
-Example:
+This is the first mod that I've made from scratch and was originally made for a server that I administrate.
+It is a simple mod allowing players to list other players and what world they're in.
+
+
+Usage
+/online - Lists all players on the server and what world they are in.
+This skips the worlds that are empty.
+/online will output:
 Online in "world1": player1 player2 player3
 Online in "world2": player4 player5
 
 
-Usage: /online world2
-Lists all players on server in the world entered
-Example: Online in "world2": player4 player5
+/online [world name] - Lists all players on server in the world entered
+If there are no online players in the world provided the player will get a message saying that there are no players online in that world.
 
-I would like to thank my family for their support.
+/online [world name] will output:
+Online in "world name": player4 player5
+
+If the world isn't found the player will be getting a message saying that the world couldn't be found.
+
+There's a configuration file generated for color changing and translation of the messages.
+
+Supported colors:
+  black
+  white 
+  navy
+  lime 
+  green
+  aqua 
+  teal
+  rose 
+  red
+  pink 
+  purple
+  yellow 
+  gold 
+  silver 
+  gray 
+  blue
