@@ -2,14 +2,11 @@ package se.xtralarge.online;
 
 import java.util.List;
 import java.util.logging.Logger;
-//import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-//import java.io.File;
 
 // Main class
 public class Online extends JavaPlugin {
@@ -17,8 +14,6 @@ public class Online extends JavaPlugin {
 	
 	// Plug-in enabled
 	public void onEnable(){
-		//this.saveConfig();
-		
 		log.info(this.getDescription().getFullName() +" has been enabled!");
 		
 		this.getConfig().options().copyDefaults(true);
@@ -54,6 +49,7 @@ public class Online extends JavaPlugin {
 		return true;
 	}
 	
+	// Output
 	private void outputWorldPlayers(World world, CommandSender sender, String argWorld, Boolean showNotOnline) {
 		if(world != null) {
 			String worldName = world.getName();
@@ -67,22 +63,19 @@ public class Online extends JavaPlugin {
 			if(playerOutList.length() > 0) {
 				String message = parseMessage(getConfig().getString("messages.players.online"), worldName, playerOutList);
 				sender.sendMessage(message);
-				//ChatColor.GREEN +"Online"+ ChatColor.WHITE +" i \""+ worldName +"\": "+ playerOutList
 			} else {
 				if(showNotOnline) {
 					String message = parseMessage(getConfig().getString("messages.players.nonefound"), worldName, "");
 					sender.sendMessage(message);
-					//ChatColor.RED +"Inga spelare online i \""+ worldName +"\""
 				}
 			}
 		} else {
 			String message = parseMessage(getConfig().getString("messages.world.notexists"), argWorld, "");
 			sender.sendMessage(message);
-			//ChatColor.RED +"Världen \""+ argWorld +"\" finns inte."
 		}
 	}
 	
-	//Parse messages
+	// Parse messages
 	private static String parseMessage(String configString, String worldName, String playerOutList) {
 		String parsedString = configString;
 		
@@ -95,7 +88,7 @@ public class Online extends JavaPlugin {
 		return parsedString;
 	}
 	
-	//Put some color on those messages!
+	// Put some color on those messages!
 	private static String colorize(String string) {
 		string = string.replace("<r>", "")
 				.replace("<black>", "\u00A70").replace("<navy>", "\u00A71")
