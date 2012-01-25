@@ -17,7 +17,7 @@ public class Online extends JavaPlugin {
 		log.info(this.getDescription().getFullName() +" has been enabled!");
 		
 		this.getConfig().options().copyDefaults(true);
-        saveConfig();
+		saveConfig();
 	}
 	
 	// Plug-in disabled
@@ -30,6 +30,17 @@ public class Online extends JavaPlugin {
 		if(cmd.getName().equalsIgnoreCase("online")) {
 			World world = null;
 			List<World> worlds = null;
+			int onlineplayers = this.getServer().getOnlinePlayers().length;
+			int maxplayers = this.getServer().getMaxPlayers();
+			
+			if(getConfig().getBoolean("showtotalonline")) {
+				sender.sendMessage(getConfig().getString("messages.players.totalonline").replace("%online%", onlineplayers +"")
+						.replace("%maxplayers%", maxplayers +""));
+				
+				if(onlineplayers > 0) {
+					sender.sendMessage(" ");
+				}
+			}
 			
 			if (args.length > 1) {
 				return true;
@@ -55,32 +66,36 @@ public class Online extends JavaPlugin {
 			String worldName = world.getName();
 			List<Player> playerList = world.getPlayers();
 			String playerOutList = "";
+			String ratio = null;
 			
 			for (int i=0; i < playerList.size(); i++) {
 				playerOutList += playerList.get(i).getDisplayName() +" ";
 			}
 
+			ratio = "("+ playerList.size() +"/"+ this.getServer().getOnlinePlayers().length +")";
+
 			if(playerOutList.length() > 0) {
-				String message = parseMessage(getConfig().getString("messages.players.online"), worldName, playerOutList);
+				String message = parseMessage(getConfig().getString("messages.players.online"), worldName, playerOutList, ratio);
 				sender.sendMessage(message);
 			} else {
 				if(showNotOnline) {
-					String message = parseMessage(getConfig().getString("messages.players.nonefound"), worldName, "");
+					String message = parseMessage(getConfig().getString("messages.players.nonefound"), worldName, "", "");
 					sender.sendMessage(message);
 				}
 			}
 		} else {
-			String message = parseMessage(getConfig().getString("messages.world.notexists"), argWorld, "");
+			String message = parseMessage(getConfig().getString("messages.world.notexists"), argWorld, "", "");
 			sender.sendMessage(message);
 		}
 	}
 	
 	// Parse messages
-	private static String parseMessage(String configString, String worldName, String playerOutList) {
+	private static String parseMessage(String configString, String worldName, String playerOutList, String ratio) {
 		String parsedString = configString;
 		
 		parsedString = parsedString.replaceAll("%world%", worldName)
-				.replaceAll("%players%", playerOutList);
+				.replaceAll("%players%", playerOutList)
+				.replace("%ratio%", ratio);
 		
 		parsedString = colorize(parsedString);
 		
@@ -92,13 +107,13 @@ public class Online extends JavaPlugin {
 	private static String colorize(String string) {
 		string = string.replace("<r>", "")
 				.replace("<black>", "\u00A70").replace("<navy>", "\u00A71")
-                .replace("<green>", "\u00A72").replace("<teal>", "\u00A73")
-                .replace("<red>", "\u00A74").replace("<purple>", "\u00A75")
-                .replace("<gold>", "\u00A76").replace("<silver>", "\u00A77")
-                .replace("<gray>", "\u00A78").replace("<blue>", "\u00A79")
-                .replace("<lime>", "\u00A7a").replace("<aqua>", "\u00A7b")
-                .replace("<rose>", "\u00A7c").replace("<pink>", "\u00A7d")
-                .replace("<yellow>", "\u00A7e").replace("<white>", "\u00A7f");
+				.replace("<green>", "\u00A72").replace("<teal>", "\u00A73")
+				.replace("<red>", "\u00A74").replace("<purple>", "\u00A75")
+				.replace("<gold>", "\u00A76").replace("<silver>", "\u00A77")
+				.replace("<gray>", "\u00A78").replace("<blue>", "\u00A79")
+				.replace("<lime>", "\u00A7a").replace("<aqua>", "\u00A7b")
+				.replace("<rose>", "\u00A7c").replace("<pink>", "\u00A7d")
+				.replace("<yellow>", "\u00A7e").replace("<white>", "\u00A7f");
 		
 		return string;
 	}

@@ -1,7 +1,12 @@
-## 
+# #
 # Variables
 #   These are wrapped in % and should be in here for the plug-in to make sense.
-#
+#   %online% - How many players are online
+#   %maxplayers% - Max players on server
+#   %world% - World name
+#   %ratio% - Shows players in world vs. players online
+#   %players% - List of players
+# #
 # Colors 
 #   You can use these as you please in each message 
 # 
@@ -19,11 +24,13 @@
 # 
 #   Example: 
 #   <red>Online <black>players <green>in <pink>%world%: <gold>%players% 
-## 
+# #
 
+showtotalonline: true
 messages:
   players:
-    online: "<green>Online <white>in %world%: %players%"
+    totalonline: "%online% of %maxplayers% online"
+    online: "<green>Online <white>in %world% %ratio%: %players%"
     nonefound: "<red>No players online in %world%"
   world:
     notexists: "<red>The world %world% does not exist!"
