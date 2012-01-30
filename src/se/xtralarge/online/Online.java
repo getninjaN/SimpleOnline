@@ -5,12 +5,16 @@ import java.util.logging.Logger;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 // Main class
 public class Online extends JavaPlugin {
 	Logger log = Logger.getLogger("Minecraft"); // Log
+	private FileConfiguration config = null;
+	private static int maxplayers = 0;
+	private static int onlineplayers = 0;
 	
 	// Plug-in enabled
 	public void onEnable(){
@@ -18,6 +22,8 @@ public class Online extends JavaPlugin {
 		
 		this.getConfig().options().copyDefaults(true);
 		saveConfig();
+		
+		config = this.getConfig();
 	}
 	
 	// Plug-in disabled
@@ -30,12 +36,20 @@ public class Online extends JavaPlugin {
 		if(cmd.getName().equalsIgnoreCase("online")) {
 			World world = null;
 			List<World> worlds = null;
-			int onlineplayers = this.getServer().getOnlinePlayers().length;
-			int maxplayers = this.getServer().getMaxPlayers();
+			onlineplayers = this.getServer().getOnlinePlayers().length;
+			maxplayers = this.getServer().getMaxPlayers();
 			
-			if(getConfig().getBoolean("showtotalonline")) {
-				sender.sendMessage(getConfig().getString("messages.players.totalonline").replace("%online%", onlineplayers +"")
-						.replace("%maxplayers%", maxplayers +""));
+			// Reload
+			if(sender.hasPermission("simpleonline.reload")) {
+				if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+					configReload(sender);
+					
+					return true;
+				}
+			}
+			
+			if(config.getBoolean("showtotalonline")) {
+				sender.sendMessage(parseMessage(config.getString("messages.players.totalonline"),null,null,null));
 				
 				if(onlineplayers > 0) {
 					sender.sendMessage(" ");
@@ -75,16 +89,16 @@ public class Online extends JavaPlugin {
 			ratio = "("+ playerList.size() +"/"+ this.getServer().getOnlinePlayers().length +")";
 
 			if(playerOutList.length() > 0) {
-				String message = parseMessage(getConfig().getString("messages.players.online"), worldName, playerOutList, ratio);
+				String message = parseMessage(config.getString("messages.players.online"), worldName, playerOutList, ratio);
 				sender.sendMessage(message);
 			} else {
 				if(showNotOnline) {
-					String message = parseMessage(getConfig().getString("messages.players.nonefound"), worldName, "", "");
+					String message = parseMessage(config.getString("messages.players.nonefound"), worldName, "", "");
 					sender.sendMessage(message);
 				}
 			}
 		} else {
-			String message = parseMessage(getConfig().getString("messages.world.notexists"), argWorld, "", "");
+			String message = parseMessage(config.getString("messages.world.notexists"), argWorld, "", "");
 			sender.sendMessage(message);
 		}
 	}
@@ -93,9 +107,11 @@ public class Online extends JavaPlugin {
 	private static String parseMessage(String configString, String worldName, String playerOutList, String ratio) {
 		String parsedString = configString;
 		
-		parsedString = parsedString.replaceAll("%world%", worldName)
-				.replaceAll("%players%", playerOutList)
-				.replace("%ratio%", ratio);
+		parsedString = parsedString.replaceAll("%maxplayers%", maxplayers +"");
+		parsedString = parsedString.replaceAll("%online%", onlineplayers +"");
+		parsedString = parsedString.replaceAll("%world%", worldName);
+		parsedString = parsedString.replaceAll("%players%", playerOutList);
+		parsedString = parsedString.replaceAll("%ratio%", ratio);
 		
 		parsedString = colorize(parsedString);
 		
@@ -116,5 +132,11 @@ public class Online extends JavaPlugin {
 				.replace("<yellow>", "\u00A7e").replace("<white>", "\u00A7f");
 		
 		return string;
+	}
+	
+	private void configReload(CommandSender sender) {
+		this.reloadConfig();
+		config = this.getConfig();
+		sender.sendMessage(this.getDescription().getFullName() +" reloaded");
 	}
 }
