@@ -6,6 +6,7 @@
 #   %world% - World name
 #   %ratio% - Shows players in world vs. players online
 #   %players% - List of players
+#   %listplayers% - Show /listplayers message
 # #
 # Colors 
 #   You can use these as you please in each message 
@@ -25,9 +26,17 @@
 #   Example: 
 #   <red>Online <black>players <green>in <pink>%world%: <gold>%players% 
 # #
+# Keys
+#   showtotalonline (true/false) - If to display totalonline in /listplayers
+#   totalonline (String) - Is the message for the Online vs. Max players, displayed if showtotalonline is set to true
+#   online (String) - Is the message that is displayed for each world output when using /listplayers
+#   nonefound (String) - Is the message that is displayed when no players were found
+#   notexists (String) - Is the message that is displayed if a provided world does not exist.
+# #
 
 showtotalonline: true
 messages:
+  uselist: "Use %listplayers% to display players"
   players:
     totalonline: "%online% of %maxplayers% online"
     online: "<green>Online <white>in %world% %ratio%: %players%"
