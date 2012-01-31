@@ -84,14 +84,23 @@ public class Online extends JavaPlugin {
 		if(world != null) {
 			String worldName = world.getName();
 			List<Player> playerList = world.getPlayers();
+			int playerCount = 0;
 			String playerOutList = "";
 			String ratio = null;
+			Player currentPlayer = null;
 			
 			for (int i=0; i < playerList.size(); i++) {
-				playerOutList += playerList.get(i).getDisplayName() +" ";
+				currentPlayer = playerList.get(i);
+				if(currentPlayer.isOnline()) {
+					if(!playerOutList.contains(currentPlayer.getDisplayName())) {
+						playerOutList += playerList.get(i).getDisplayName() +" ";
+					
+						playerCount++;
+					}
+				}
 			}
 
-			ratio = "("+ playerList.size() +"/"+ this.getServer().getOnlinePlayers().length +")";
+			ratio = "("+ playerCount +"/"+ this.getServer().getOnlinePlayers().length +")";
 
 			if(playerOutList.length() > 0) {
 				String message = parseMessage(config.getString("messages.players.online"), worldName, playerOutList, ratio);
