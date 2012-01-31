@@ -4,5 +4,8 @@ version: 1.1.1
 author: getninjaN
 commands:
    online:
-      description: Shows online players in entered world
-      usage: /online <world name> or /online
+      description: Displays how many players that is online vs. max players
+      usage: /online
+   listplayers:
+      description: Displays players on the entire server and what world they are in
+      usage: /listplayers or /listplayers [world name] 
