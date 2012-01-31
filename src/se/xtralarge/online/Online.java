@@ -33,12 +33,12 @@ public class Online extends JavaPlugin {
 	
 	// When player enters command
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
+		World world = null;
+		List<World> worlds = null;
+		onlineplayers = this.getServer().getOnlinePlayers().length;
+		maxplayers = this.getServer().getMaxPlayers();
+		
 		if(cmd.getName().equalsIgnoreCase("online")) {
-			World world = null;
-			List<World> worlds = null;
-			onlineplayers = this.getServer().getOnlinePlayers().length;
-			maxplayers = this.getServer().getMaxPlayers();
-			
 			// Reload
 			if(sender.hasPermission("simpleonline.reload")) {
 				if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
@@ -48,6 +48,11 @@ public class Online extends JavaPlugin {
 				}
 			}
 			
+			sender.sendMessage(parseMessage(config.getString("messages.players.totalonline"),null,null,null));
+			sender.sendMessage(parseMessage(config.getString("messages.uselist"),null,null,null));
+		}
+		
+		if(cmd.getName().equalsIgnoreCase("listplayers")) {
 			if(config.getBoolean("showtotalonline")) {
 				sender.sendMessage(parseMessage(config.getString("messages.players.totalonline"),null,null,null));
 				
@@ -112,6 +117,7 @@ public class Online extends JavaPlugin {
 		parsedString = parsedString.replaceAll("%world%", worldName);
 		parsedString = parsedString.replaceAll("%players%", playerOutList);
 		parsedString = parsedString.replaceAll("%ratio%", ratio);
+		parsedString = parsedString.replaceAll("%listplayers%", "/listplayers");
 		
 		parsedString = colorize(parsedString);
 		
