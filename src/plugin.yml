@@ -6,6 +6,8 @@ commands:
    online:
       description: Displays how many players that is online vs. max players
       usage: /online
+      aliases: [so,sonline]
    listplayers:
       description: Displays players on the entire server and what world they are in
-      usage: /listplayers or /listplayers [world name] 
+      usage: /listplayers or /listplayers [world name]
+      aliases: [wwho,listpl] 
