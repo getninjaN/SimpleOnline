@@ -35,7 +35,7 @@ public class Online extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		World world = null;
 		List<World> worlds = null;
-		onlineplayers = this.getServer().getOnlinePlayers().length;
+		onlineplayers = getOnlinePlayers(sender);
 		maxplayers = this.getServer().getMaxPlayers();
 		
 		if(cmd.getName().equalsIgnoreCase("online")) {
@@ -88,10 +88,18 @@ public class Online extends JavaPlugin {
 			String playerOutList = "";
 			String ratio = null;
 			Player currentPlayer = null;
+			Boolean playerVisible = true;
+			Player sendingPlayer = null;
+			
+			if(sender instanceof Player) { sendingPlayer = (Player) sender; }
 			
 			for (int i=0; i < playerList.size(); i++) {
 				currentPlayer = playerList.get(i);
-				if(currentPlayer.isOnline()) {
+				if(sendingPlayer != null) {
+					if(!sendingPlayer.isOp()) { playerVisible = sendingPlayer.canSee(currentPlayer); }
+				}
+				
+				if(currentPlayer.isOnline() && playerVisible) {
 					if(!playerOutList.contains(currentPlayer.getDisplayName())) {
 						playerOutList += playerList.get(i).getDisplayName() +" ";
 					
@@ -99,8 +107,8 @@ public class Online extends JavaPlugin {
 					}
 				}
 			}
-
-			ratio = "("+ playerCount +"/"+ this.getServer().getOnlinePlayers().length +")";
+			
+			ratio = "("+ playerCount +"/"+ getOnlinePlayers(sendingPlayer) +")";
 
 			if(playerOutList.length() > 0) {
 				String message = parseMessage(config.getString("messages.players.online"), worldName, playerOutList, ratio);
@@ -115,6 +123,20 @@ public class Online extends JavaPlugin {
 			String message = parseMessage(config.getString("messages.world.notexists"), argWorld, "", "");
 			sender.sendMessage(message);
 		}
+	}
+	
+	private int getOnlinePlayers(CommandSender sender) {
+		int onlinePlayers = 0;
+		Player[] playerServerList = this.getServer().getOnlinePlayers();
+		Player player = (Player) sender;
+		
+		for(int i=0; i < playerServerList.length; i++) {
+			if(player.canSee(playerServerList[i].getPlayer())) {
+				onlinePlayers++;
+			}
+		}
+		
+		return onlinePlayers;
 	}
 	
 	// Parse messages
