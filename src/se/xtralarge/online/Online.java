@@ -15,6 +15,7 @@ public class Online extends JavaPlugin {
 	private FileConfiguration config = null;
 	private static int maxplayers = 0;
 	private static int onlineplayers = 0;
+	private static Boolean isplayer = false;
 	
 	// Plug-in enabled
 	public void onEnable(){
@@ -37,6 +38,8 @@ public class Online extends JavaPlugin {
 		List<World> worlds = null;
 		onlineplayers = getOnlinePlayers(sender);
 		maxplayers = this.getServer().getMaxPlayers();
+		
+		if(sender instanceof Player) { isplayer = true; } else { isplayer = false; }
 		
 		if(cmd.getName().equalsIgnoreCase("online")) {
 			// Reload
@@ -128,10 +131,17 @@ public class Online extends JavaPlugin {
 	private int getOnlinePlayers(CommandSender sender) {
 		int onlinePlayers = 0;
 		Player[] playerServerList = this.getServer().getOnlinePlayers();
-		Player player = (Player) sender;
 		
-		for(int i=0; i < playerServerList.length; i++) {
-			if(player.canSee(playerServerList[i].getPlayer())) {
+		if(isplayer) {
+			Player player = (Player) sender;
+			
+			for(int i=0; i < playerServerList.length; i++) {
+				if(player.canSee(playerServerList[i].getPlayer())) {
+					onlinePlayers++;
+				}
+			}
+		} else {
+			for(int i=0; i < playerServerList.length; i++) {
 				onlinePlayers++;
 			}
 		}
@@ -150,7 +160,11 @@ public class Online extends JavaPlugin {
 		parsedString = parsedString.replaceAll("%ratio%", ratio);
 		parsedString = parsedString.replaceAll("%listplayers%", "/listplayers");
 		
-		parsedString = colorize(parsedString);
+		if(isplayer) {
+			parsedString = colorize(parsedString);
+		} else {
+			parsedString = stripColors(parsedString);
+		}
 		
 		
 		return parsedString;
@@ -167,6 +181,20 @@ public class Online extends JavaPlugin {
 				.replace("<lime>", "\u00A7a").replace("<aqua>", "\u00A7b")
 				.replace("<rose>", "\u00A7c").replace("<pink>", "\u00A7d")
 				.replace("<yellow>", "\u00A7e").replace("<white>", "\u00A7f");
+		
+		return string;
+	}
+	
+	private static String stripColors(String string) {
+		string = string.replace("<r>", "")
+				.replace("<black>", "").replace("<navy>", "")
+				.replace("<green>", "").replace("<teal>", "")
+				.replace("<red>", "").replace("<purple>", "")
+				.replace("<gold>", "").replace("<silver>", "")
+				.replace("<gray>", "").replace("<blue>", "")
+				.replace("<lime>", "").replace("<aqua>", "")
+				.replace("<rose>", "").replace("<pink>", "")
+				.replace("<yellow>", "").replace("<white>", "");
 		
 		return string;
 	}
